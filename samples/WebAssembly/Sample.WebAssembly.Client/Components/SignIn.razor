@@ -1,0 +1,13 @@
+@using Blazone.Authentication.Options
+@using Microsoft.Extensions.Options
+
+@inject NavigationManager NavigationManager
+@inject IOptions<AuthenticationEndpointOptions> AuthenticationEndpointOptions
+
+@code {
+    protected override void OnInitialized()
+    {
+        var signinUrl = AuthenticationEndpointOptions.Value.SignInUrl(NavigationManager.Uri);
+        NavigationManager.NavigateTo(signinUrl, forceLoad: true);
+    }
+}
