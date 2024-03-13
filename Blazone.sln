@@ -13,7 +13,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blazone.Authentication.Test
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Samples", "Samples", "{F5705DB7-D853-4E18-B5BA-29916029FF25}"
 	ProjectSection(SolutionItems) = preProject
-		samples\WebAssembly\Directory.Build.props = samples\WebAssembly\Directory.Build.props
+		samples\Directory.Build.props = samples\Directory.Build.props
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sample.WebAssembly.Client", "samples\WebAssembly\Sample.WebAssembly.Client\Sample.WebAssembly.Client.csproj", "{948ABC1F-590F-4726-9CE1-AF4BFF13B024}"
@@ -28,6 +28,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{E0186A5E
 		.github\workflows\dotnet.yml = .github\workflows\dotnet.yml
 		README.md = README.md
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sample.ServerRender.Web", "samples\ServerRender\Sample.ServerRender.Web\Sample.ServerRender.Web.csproj", "{60E9A391-5DBF-441B-8D2F-C8B34B4F5F99}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -59,6 +61,10 @@ Global
 		{2D47D31E-DB0D-4AF9-8AB1-368E420D612B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2D47D31E-DB0D-4AF9-8AB1-368E420D612B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2D47D31E-DB0D-4AF9-8AB1-368E420D612B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{60E9A391-5DBF-441B-8D2F-C8B34B4F5F99}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{60E9A391-5DBF-441B-8D2F-C8B34B4F5F99}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{60E9A391-5DBF-441B-8D2F-C8B34B4F5F99}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{60E9A391-5DBF-441B-8D2F-C8B34B4F5F99}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -68,6 +74,7 @@ Global
 		{948ABC1F-590F-4726-9CE1-AF4BFF13B024} = {F5705DB7-D853-4E18-B5BA-29916029FF25}
 		{EC7E6A3F-05CA-4564-AF44-E3A2F5492BFF} = {F5705DB7-D853-4E18-B5BA-29916029FF25}
 		{2D47D31E-DB0D-4AF9-8AB1-368E420D612B} = {F5705DB7-D853-4E18-B5BA-29916029FF25}
+		{60E9A391-5DBF-441B-8D2F-C8B34B4F5F99} = {F5705DB7-D853-4E18-B5BA-29916029FF25}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {28EA995C-96F4-4FAF-87D5-2D1F3CE67833}

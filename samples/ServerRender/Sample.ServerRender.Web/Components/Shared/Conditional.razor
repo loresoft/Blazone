@@ -1,0 +1,26 @@
+@if (Condition)
+{
+    if (Passed != null)
+    {
+        @Passed
+    }
+    else if (ChildContent != null)
+    {
+        @ChildContent
+    }
+}
+else if (Failed != null)
+{
+    @Failed
+}
+
+@code {
+
+    [Parameter] public bool Condition { get; set; }
+
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    [Parameter] public RenderFragment? Passed { get; set; }
+
+    [Parameter] public RenderFragment? Failed { get; set; }
+}
