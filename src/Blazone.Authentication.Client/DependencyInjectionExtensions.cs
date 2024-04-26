@@ -4,6 +4,7 @@ using Blazone.Authentication.Providers;
 
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace Blazone.Authentication;
 
@@ -18,8 +19,8 @@ public static class DependencyInjectionExtensions
         services.AddAuthorizationCore();
         services.AddMemoryCache();
 
-        services.AddScoped<AuthenticationStateProvider, ServerAuthenticationStateProvider>();
-        services.AddTransient<AuthenticationRequiredHandler>();
+        services.TryAddTransient<AuthenticationStateProvider, ServerAuthenticationStateProvider>();
+        services.TryAddTransient<AuthenticationRequiredHandler>();
 
         return services;
     }
