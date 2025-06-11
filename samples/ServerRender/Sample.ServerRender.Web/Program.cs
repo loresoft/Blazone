@@ -3,7 +3,7 @@ using Blazone.Authentication;
 using Microsoft.Identity.Web;
 
 using Sample.ServerRender.Web.Components;
-using Sample.ServerRender.Web.Services;
+using Sample.Shared;
 
 namespace Sample.ServerRender.Web;
 

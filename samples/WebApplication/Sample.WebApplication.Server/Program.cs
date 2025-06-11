@@ -1,22 +1,20 @@
-using System.Security.Claims;
-
 using Blazone.Authentication;
+using Blazone.Authentication.Providers;
 
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Identity.Web;
 
 using Sample.Shared;
-using Sample.WebAssembly.Server.Services;
+using Sample.WebApplication.Server.Components;
 
-namespace Sample.WebAssembly.Server;
+namespace Sample.WebApplication.Server;
 
 public static class Program
 {
     public static void Main(string[] args)
     {
-        var builder = WebApplication.CreateBuilder(args);
+        var builder = Microsoft.AspNetCore.Builder.WebApplication.CreateBuilder(args);
 
         ConfigureServices(builder);
 
@@ -27,49 +25,48 @@ public static class Program
         app.Run();
     }
 
-
     private static void ConfigureServices(WebApplicationBuilder builder)
     {
         builder.Services
             .AddMicrosoftIdentityWebAppAuthentication(builder.Configuration);
 
         builder.Services
-            .AddAuthorization(options => options.FallbackPolicy = options.DefaultPolicy)
+            .AddAuthorization()
             .AddBlazoneServer()
+            .AddBlazoneClient<PersistingServerAuthenticationStateProvider>()
             .AddAntiforgery();
+
+        builder.Services
+            .AddRazorComponents()
+            .AddInteractiveWebAssemblyComponents();
 
         builder.Services
             .AddEndpointsApiExplorer()
             .AddSwaggerGen();
 
         builder.Services
-            .AddProblemDetails();
-
-        builder.Services
             .TryAddSingleton<WeatherForecastService>();
-
-        builder.Services.AddTransient<IClaimsTransformation, ClaimsTransformation>();
 
         builder.Services.Configure<CookieAuthenticationOptions>(
             name: CookieAuthenticationDefaults.AuthenticationScheme,
             configureOptions: options => options.Cookie.Name = ".Sample.Authentication"
         );
+
     }
 
-    private static void ConfigureMiddleware(WebApplication app)
+    private static void ConfigureMiddleware(Microsoft.AspNetCore.Builder.WebApplication app)
     {
         if (app.Environment.IsDevelopment())
             app.UseWebAssemblyDebugging();
         else
+        {
+            app.UseExceptionHandler("/Error");
             app.UseHsts();
-
-        app.UseExceptionHandler();
-        app.UseStatusCodePages();
+        }
 
         app.UseSwagger();
         app.UseSwaggerUI();
 
-        app.UseBlazorFrameworkFiles();
         app.UseHttpsRedirection();
 
         app.UseStaticFiles();
@@ -80,11 +77,8 @@ public static class Program
 
         app.MapBlazoneEndpoints();
 
-        app.MapGet("/api/weather", (WeatherForecastService weatherService, ClaimsPrincipal principal) => weatherService.Get(principal))
-            .WithName("GetWeatherForecast")
-            .WithOpenApi()
-            .RequireAuthorization();
-
-        app.MapFallbackToFile("index.html").RequireAuthorization();
+        app.MapRazorComponents<App>()
+            .AddInteractiveWebAssemblyRenderMode()
+            .AddAdditionalAssemblies(typeof(Client._Imports).Assembly);
     }
 }

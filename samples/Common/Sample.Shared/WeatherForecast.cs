@@ -1,4 +1,4 @@
-namespace Sample.WebAssembly.Shared;
+namespace Sample.Shared;
 
 public class WeatherForecast
 {

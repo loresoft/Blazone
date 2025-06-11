@@ -1,72 +1,23 @@
-using System.Net.Http.Json;
-using System.Security.Claims;
-
-using Blazone.Authentication.Models;
-using Blazone.Authentication.Options;
-
-using Microsoft.AspNetCore.Components.Authorization;
-using Microsoft.Extensions.Caching.Memory;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
+﻿using Microsoft.AspNetCore.Components.Authorization;
 
 namespace Blazone.Authentication.Providers;
 
-public class ServerAuthenticationStateProvider : AuthenticationStateProvider
+/// <summary>
+/// An <see cref="AuthenticationStateProvider"/> intended for use in server-side Blazor.
+/// </summary>
+public class ServerAuthenticationStateProvider : AuthenticationStateProvider, IHostEnvironmentAuthenticationStateProvider
 {
-    private static readonly ClaimsPrincipal _notAuthorized = new(new ClaimsIdentity());
-    private const string _cacheKey = "Blazone:User:Current";
+    private Task<AuthenticationState> _authenticationStateTask;
 
-    private readonly HttpClient _httpClient;
-    private readonly ILogger<ServerAuthenticationStateProvider> _logger;
-    private readonly AuthenticationEndpointOptions _authenticationOptions;
-    private readonly IMemoryCache _memoryCache;
+    /// <inheritdoc />
+    public override Task<AuthenticationState> GetAuthenticationStateAsync()
+        => _authenticationStateTask
+        ?? throw new InvalidOperationException($"Do not call {nameof(GetAuthenticationStateAsync)} outside of the DI scope for a Razor component. Typically, this means you can call it only within a Razor component or inside another DI service that is resolved for a Razor component.");
 
-    public ServerAuthenticationStateProvider(
-        HttpClient httpClient,
-        ILogger<ServerAuthenticationStateProvider> logger,
-        IOptions<AuthenticationEndpointOptions> authenticationOptions,
-        IMemoryCache memoryCache)
+    /// <inheritdoc />
+    public void SetAuthenticationState(Task<AuthenticationState> authenticationStateTask)
     {
-        _httpClient = httpClient;
-        _logger = logger;
-        _authenticationOptions = authenticationOptions.Value;
-        _memoryCache = memoryCache;
-    }
-
-    public override async Task<AuthenticationState> GetAuthenticationStateAsync()
-    {
-        try
-        {
-            var claimsPrincipal = await _memoryCache.GetOrCreateAsync(_cacheKey, LoadUser);
-            return new AuthenticationState(claimsPrincipal ?? _notAuthorized);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Error loading user authentication: {message}", ex.Message);
-            return new AuthenticationState(_notAuthorized);
-        }
-    }
-
-    private async Task<ClaimsPrincipal> LoadUser(ICacheEntry cacheEntry)
-    {
-        var userUrl = _authenticationOptions.UserUrl();
-        var userData = await _httpClient.GetFromJsonAsync<UserClaim>(userUrl);
-        if (userData == null || !userData.IsAuthenticated)
-            return _notAuthorized;
-
-        var claims = userData.Claims?.Select(c => new Claim(c.Type, c.Value));
-
-        var identity = new ClaimsIdentity(
-            claims: claims,
-            authenticationType: nameof(ServerAuthenticationStateProvider),
-            nameType: userData.NameClaimType,
-            roleType: userData.RoleClaimType);
-
-        _logger.LogInformation("User {userName} authenticated.", identity.Name);
-
-        // set cache time
-        cacheEntry.SlidingExpiration = _authenticationOptions.UserCacheTime;
-
-        return new ClaimsPrincipal(identity);
+        _authenticationStateTask = authenticationStateTask ?? throw new ArgumentNullException(nameof(authenticationStateTask));
+        NotifyAuthenticationStateChanged(_authenticationStateTask);
     }
 }

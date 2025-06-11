@@ -1,6 +1,6 @@
-using Sample.WebAssembly.Shared;
+using System.Security.Claims;
 
-namespace Sample.WebAssembly.Server.Services;
+namespace Sample.Shared;
 
 public class WeatherForecastService
 {
@@ -9,9 +9,9 @@ public class WeatherForecastService
         "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
     };
 
-    public IEnumerable<WeatherForecast> Get(System.Security.Claims.ClaimsPrincipal principal)
+    public IEnumerable<WeatherForecast> Get(ClaimsPrincipal? principal = null)
     {
-        var user = principal.Identity;
+        var user = principal?.Identity;
 
         return Enumerable
             .Range(1, 5)
@@ -23,5 +23,4 @@ public class WeatherForecastService
             })
             .ToArray();
     }
-
 }

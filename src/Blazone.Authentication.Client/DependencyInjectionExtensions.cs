@@ -12,6 +12,12 @@ public static class DependencyInjectionExtensions
 {
     public static IServiceCollection AddBlazoneClient(this IServiceCollection services, Action<AuthenticationEndpointOptions>? configure = null)
     {
+        return AddBlazoneClient<EndpointAuthenticationStateProvider>(services, configure);
+    }
+
+    public static IServiceCollection AddBlazoneClient<TProvider>(this IServiceCollection services, Action<AuthenticationEndpointOptions>? configure = null)
+        where TProvider : AuthenticationStateProvider
+    {
         services.AddOptions<AuthenticationEndpointOptions>();
         if (configure != null)
             services.Configure(configure);
@@ -19,10 +25,9 @@ public static class DependencyInjectionExtensions
         services.AddAuthorizationCore();
         services.AddMemoryCache();
 
-        services.TryAddTransient<AuthenticationStateProvider, ServerAuthenticationStateProvider>();
+        services.TryAddTransient<AuthenticationStateProvider, TProvider>();
         services.TryAddTransient<AuthenticationRequiredHandler>();
 
         return services;
     }
-
 }

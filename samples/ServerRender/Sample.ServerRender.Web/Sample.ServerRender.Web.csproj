@@ -17,6 +17,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\src\Blazone.Authentication.Server\Blazone.Authentication.Server.csproj" />
+    <ProjectReference Include="..\..\Common\Sample.Shared\Sample.Shared.csproj" />
   </ItemGroup>
 
 </Project>
