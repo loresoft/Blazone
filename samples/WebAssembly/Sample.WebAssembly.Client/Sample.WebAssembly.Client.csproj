@@ -10,11 +10,12 @@
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="9.0.8" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Authentication" Version="9.0.8" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="9.0.8" PrivateAssets="all" />
-    <PackageReference Include="Microsoft.Extensions.Http" Version="9.0.7" />
+    <PackageReference Include="Microsoft.Extensions.Http" Version="9.0.8" />
     <PackageReference Include="System.Net.Http.Json" Version="9.0.6" />
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="9.0.8" />
     <ProjectReference Include="..\..\..\src\Blazone.Authentication.Client\Blazone.Authentication.Client.csproj" />
     <ProjectReference Include="..\Sample.WebAssembly.Shared\Sample.WebAssembly.Shared.csproj" />
   </ItemGroup>
